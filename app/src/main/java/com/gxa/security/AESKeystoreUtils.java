@@ -88,18 +88,13 @@ class AESKeystoreUtils {
 
             keyGenerator.init(spec);
             keyGenerator.generateKey();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
-        } catch (InvalidAlgorithmParameterException e) {
+        } catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidAlgorithmParameterException e) {
             e.printStackTrace();
         }
     }
 
 
     public String encryptData(String needEncrypt, String alias) {
-
         if (!isHaveKeyStore(alias)) {
             createKey(alias);
         }
@@ -118,26 +113,9 @@ class AESKeystoreUtils {
             //ciphers initialization vector (IV)的引用,用于解密
             encryptIv = cipher.getIV();
             return Base64.encodeToString(cipher.doFinal(needEncrypt.getBytes()), Base64.NO_WRAP);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (CertificateException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (UnrecoverableEntryException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return "空指针异常";
-        } catch (NoSuchAlgorithmException e) {
+        } catch (IOException | KeyStoreException | CertificateException | InvalidKeyException
+                | UnrecoverableEntryException | NoSuchPaddingException | BadPaddingException
+                | IllegalBlockSizeException | NullPointerException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         return "";
@@ -164,25 +142,10 @@ class AESKeystoreUtils {
             cipher.init(Cipher.DECRYPT_MODE, secretKey, gcmParameterSpec);
             return new String(cipher.doFinal(Base64.decode(needDecrypt, Base64.NO_WRAP)));
 
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (InvalidAlgorithmParameterException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (CertificateException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnrecoverableEntryException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
+        } catch (InvalidKeyException | InvalidAlgorithmParameterException | IOException
+                | CertificateException | NoSuchAlgorithmException | UnrecoverableEntryException
+                | NoSuchPaddingException | KeyStoreException | BadPaddingException
+                | IllegalBlockSizeException e) {
             e.printStackTrace();
         }
         return "";
@@ -208,20 +171,12 @@ class AESKeystoreUtils {
             KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
             keyStore.load(null);
 
-            KeyStore.Entry keyentry = keyStore.getEntry(alias, null);
-            if (null != keyentry) {
+            KeyStore.Entry keyEntry = keyStore.getEntry(alias, null);
+            if (null != keyEntry) {
                 return true;
             }
-
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (CertificateException e) {
-            e.printStackTrace();
-        } catch (UnrecoverableEntryException e) {
+        } catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException
+                | UnrecoverableEntryException e) {
             e.printStackTrace();
         }
         return false;

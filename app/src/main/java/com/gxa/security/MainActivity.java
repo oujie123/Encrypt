@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.gxa.security.client.CarEncryptManager;
+
 /**
  * https://github.com/icastillejogomez/OpenSSL-Java-API
  */
@@ -31,6 +33,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private TextView text;
     private SharedPreferences sp;
     private SharedPreferences.Editor editor;
+
+    private CarEncryptManager mManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,30 +59,33 @@ public class MainActivity extends Activity implements View.OnClickListener {
         rsaCipherText = sp.getString(SP_RSA_CIPHER_TEXT, "default text");
         aesCipherText = sp.getString(SP_AES_CIPHER_TEXT, "default text");
         text.setText(rsaCipherText);
+
+        mManager = CarEncryptManager.getInstance();
+        mManager.init(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rsa_encrypt:  // rsa encrypt
-                rsaCipherText = EncryptSafeUtil.getInstance().encryptString(rsaExplainText, rsaAlias);
+                rsaCipherText = mManager.rsaEncrypt(rsaAlias, rsaExplainText);
                 editor = sp.edit();
                 editor.putString(SP_RSA_CIPHER_TEXT, rsaCipherText);
                 editor.apply();
                 text.setText(rsaCipherText);
                 break;
             case R.id.rsa_decrypt: // rsa decrypt
-                rsaExplainText = EncryptSafeUtil.getInstance().decryptString(rsaCipherText, rsaAlias);
+                rsaExplainText = mManager.rsaDecrypt(rsaAlias, rsaCipherText);
                 text.setText(rsaExplainText);
                 break;
             case R.id.random_text: // gen random text
-                rsaExplainText = EncryptSafeUtil.getInstance().getRandomString(100);
+                rsaExplainText = mManager.getRandomString(100);
                 aesExplainText = rsaExplainText;
                 Log.d(TAG, "random text = " + aesExplainText);
                 text.setText(rsaExplainText);
                 break;
             case R.id.aes_encrypt: //aes encrypt
-                aesCipherText = AESKeystoreUtils.getInstance().encryptData(aesExplainText, aesAlias);
+                aesCipherText = mManager.aesEncrypt(aesAlias, aesExplainText);
                 editor = sp.edit();
                 editor.putString(SP_AES_CIPHER_TEXT, aesCipherText);
                 editor.apply();
@@ -86,7 +93,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 text.setText(aesCipherText);
                 break;
             case R.id.aes_decrypt: // aes decrypt
-                aesExplainText = AESKeystoreUtils.getInstance().decryptData(aesCipherText, aesAlias);
+                aesExplainText = mManager.aesDecrypt(aesAlias, aesCipherText);
                 Log.d(TAG, "aesExplainText = " + aesExplainText);
                 text.setText(aesExplainText);
                 break;
