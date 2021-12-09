@@ -9,8 +9,6 @@ import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.gxa.security.Constants;
-
 /**
  * @ClassName: EncryptManager
  * @Author: JackOu
@@ -134,7 +132,7 @@ public class CarEncryptManagerImpl extends CarEncryptManager {
 
     private void bindService(Context context) {
         Intent intent = new Intent();
-        intent.setComponent(new ComponentName(Constants.PACKAGE_NAME, Constants.SERVICE_NAME));
+        intent.setComponent(new ComponentName(PACKAGE_NAME, SERVICE_NAME));
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 

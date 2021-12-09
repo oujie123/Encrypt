@@ -9,6 +9,9 @@ import android.content.Context;
  */
 public abstract class CarEncryptManager {
 
+    protected static final String PACKAGE_NAME = "com.gxa.security";
+    protected static final String SERVICE_NAME = "com.gxa.security.EncryptService";
+
     private static CarEncryptManager mInstance;
 
     public static CarEncryptManager getInstance() {
